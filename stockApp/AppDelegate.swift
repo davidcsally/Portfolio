@@ -11,11 +11,21 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+	// MARK: - Properties
+	let stockStore = StockStore()
 	var window: UIWindow?
-
-
+	
+	/// App Finished Launching
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
+		print(#function)
+		
+		/// initialize the stockModel in the main view to use the same model declared here
+//		let mainViewController = window!.rootViewController as! ViewController
+		let root = window?.rootViewController as! UINavigationController
+		let mainViewController = root.topViewController as! ViewController
+		/// Shared Model
+		mainViewController.stockStore = stockStore
+
 		return true
 	}
 
@@ -27,6 +37,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func applicationDidEnterBackground(_ application: UIApplication) {
 		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
 		// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+		
+		print(#function)
+		let successfullSave = stockStore.saveChanges()
+		
+		if successfullSave {
+			print("Saved all items!")
+		} else {
+			print("ERROR: Could not save any of the stocks")
+		}
 	}
 
 	func applicationWillEnterForeground(_ application: UIApplication) {
