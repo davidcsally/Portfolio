@@ -9,12 +9,11 @@
 import UIKit
 
 class PortfolioTableCell: UITableViewCell {
-
-	// MARK: - Outlets
 	
+	// MARK: - Outlets
+	@IBOutlet var triangleMarker: UILabel!
 	@IBOutlet var priceLabel: UILabel!
 	@IBOutlet var tickerLabel: UILabel!
 	@IBOutlet var numSharesLabel: UILabel!
 	@IBOutlet var returnValueOutlet: UIButton!
-	
 }

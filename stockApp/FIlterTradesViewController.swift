@@ -10,19 +10,17 @@ import UIKit
 
 class FilterTradesViewController: UITableViewController, UISearchBarDelegate {
 	
-	/// ****************
-	/// ** Properties **
-	/// ****************
+	// ******************
 	// MARK: - Properties
+	// ******************
 	
-	let validStocks = StockStore.sharedInstance.validStocks
+	var validStocks: [StockList]!
 	var filteredData = [StockList]()
 	let searchController = UISearchController(searchResultsController: nil)
 
-	/// *****************
-	/// ***** Funcs *****
-	/// *****************
+	// *************
 	// MARK: - Funcs
+	// *************
 	
 	func filterContentForSeachText(searchText: String, scope: String = "All") {
 		filteredData = validStocks.filter { stock in
@@ -38,35 +36,38 @@ class FilterTradesViewController: UITableViewController, UISearchBarDelegate {
 		tableView.reloadData()
 	}
 	
-	/// **************
-	/// **** VIEW ****
-	/// **************
+	// ***********************
 	// MARK: - View Life Cycle
+	// ***********************
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		navigationController?.setNavigationBarHidden(true, animated: true)
-		
 		// format search bar
+		navigationController?.setNavigationBarHidden(true, animated: true)
 		searchController.searchResultsUpdater = self
 		searchController.dimsBackgroundDuringPresentation = false
 		definesPresentationContext = true
 		
-		/// anchor the search bar to the top of the table
+		// anchor the search bar to the top of the table
 		tableView.tableHeaderView = searchController.searchBar
 		
-		/// this prevents the navigation controller from showing up!!
+		// this prevents the navigation controller from showing up!!
 		searchController.hidesNavigationBarDuringPresentation = false
 		
-		///
+		// more formatting
 		searchController.searchBar.searchBarStyle = .minimal
 		searchController.searchBar.showsCancelButton = false
+		searchController.searchBar.isTranslucent = false
+		
+		// change the search bar's text color to white
+		let searchBarTextField = searchController.searchBar.value(forKey: "searchField") as? UITextField
+		searchBarTextField?.textColor = UIColor.white
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		/// do all the set up in a separate thread
+		// do all the set up in a separate thread
 		DispatchQueue.main.async {
 			self.searchController.searchBar.becomeFirstResponder()
 		}
@@ -81,10 +82,9 @@ class FilterTradesViewController: UITableViewController, UISearchBarDelegate {
 		self.navigationController?.setNavigationBarHidden(true, animated: true)
 	}
 	
-	/// *****************
-	/// *** Delegates ***
-	/// *****************
+	// ***************************
 	// MARK: - TableView Delegates
+	// ***************************
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		
@@ -119,18 +119,24 @@ class FilterTradesViewController: UITableViewController, UISearchBarDelegate {
 		return cell
 	}
 	
-	/// go back when a stock is selected
+	// go back when a stock is selected
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		
 		let cell = tableView.cellForRow(at: indexPath)
 		let ticker = cell?.textLabel?.text
 		let name = cell?.detailTextLabel?.text
-		print("selecting ticker: \(ticker!)")
+		print("selecting ticker: \(ticker!), name: \(name!)")
 		
+		// define previous view
 		let previousView = navigationController?.viewControllers[1] as! TradeEditorViewViewController
-		previousView.name = name
-		previousView.ticker = ticker!
+		
+		// keep the navigation bar from becoming visible
 		previousView.navigationController?.setNavigationBarHidden(true, animated: false)
+
+		// set new stock holder
+		previousView.stockHolder = Stock(ticker: ticker!)
+		previousView.name = name!
+		previousView.ticker = ticker!
 
 		/// pop back
 		_ = navigationController?.popViewController(animated: true)
@@ -139,8 +145,11 @@ class FilterTradesViewController: UITableViewController, UISearchBarDelegate {
 
 }
 
+// ******************
 // MARK: - Extensions
-/// add ability to do searches
+// ******************
+
+// add ability to do searches
 extension FilterTradesViewController: UISearchResultsUpdating {
 	public func updateSearchResults(for searchController: UISearchController) {
 		filterContentForSeachText(searchText: searchController.searchBar.text!)

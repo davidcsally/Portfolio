@@ -12,18 +12,17 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	// MARK: - Properties
-	let stockStore = StockStore()
 	var window: UIWindow?
 	
-	/// App Finished Launching
+	// Create stock store model
+	let stockStore = StockStore()
+	
+	// App Finished Launching
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		print(#function)
 		
 		/// initialize the stockModel in the main view to use the same model declared here
-//		let mainViewController = window!.rootViewController as! ViewController
 		let root = window?.rootViewController as! UINavigationController
 		let mainViewController = root.topViewController as! ViewController
-		/// Shared Model
 		mainViewController.stockStore = stockStore
 
 		return true
@@ -38,13 +37,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
 		// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 		
-		print(#function)
-		let successfullSave = stockStore.saveChanges()
 		
-		if successfullSave {
-			print("Saved all items!")
+		// when the app enters the background, save all the data
+		print(#function)
+		
+		// return a bool to signify success or failure
+		let successfullSave = stockStore.saveChanges()
+	
+		if (successfullSave) {
+			print("Saved all items successfully")
 		} else {
-			print("ERROR: Could not save any of the stocks")
+			print("ERROR: Did not save successfully")
 		}
 	}
 

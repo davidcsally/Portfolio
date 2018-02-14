@@ -10,8 +10,8 @@ import UIKit
 
 class TodayTableCell: UITableViewCell {
 	
+	// MARK: - Outlets
 	@IBOutlet var tickerLabel: UILabel!
 	@IBOutlet var priceLabel: UILabel!
 	@IBOutlet var returnOutlet: UIButton!
-	
 }

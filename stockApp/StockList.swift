@@ -8,22 +8,21 @@
 
 import UIKit
 
-/// used for google finance API
-enum market:String {
-	case NASDAQ = "NASDAQ"
-	case NYSE = "NYSE"
-}
 
 class StockList {
+	// ******************
+	// MARK: - Properties
+	// ******************
 
 	var ticker: String
 	var name: String
-	var market: market
 	
-	init(ticker:String, name:String, market:market) {
+	// ************
+	// MARK: - Init
+	// ************
+	
+	init(ticker:String, name:String) {
 		self.ticker = ticker
 		self.name = name
-		self.market = market
 	}
-	
 }
